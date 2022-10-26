@@ -9,6 +9,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,37 +17,53 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    private  static final int REQUEST_CONTACTS_ASK_PERMISSIONS = 1;
+    private  static final int REQUEST_SMS_ASK_PERMISSIONS = 2;
+
+
+    Button btn1, btn2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        addControl();
+        addEvent();
     }
 
-    public void btnGetContactPressed(View v) {
+    private void addControl() {
+        btn1 = findViewById(R.id.btn1);
+        btn2 = findViewById(R.id.btn2);
 
     }
 
-    private void getPhoneContact() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_CONTACTS},0);
-        }
-
-        ContentResolver contentResolver = getContentResolver();
-        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        Cursor cursor = contentResolver.query(uri,null,null,null,null);
-        Log.i("Contact_Provider_Demo","TOTAL # of Contacts :::" + Integer.toString(cursor.getCount()));
-        if (cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
-                @SuppressLint("Range") String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                @SuppressLint("Range") String contactNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-
-                Log.i("Contact_Provider_Demo", "Contact Name ::: " + contactName + "Ph # :::" + contactNumber);
+    private void addEvent(){
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                xuLyMoManHinhDanhBa();
             }
-        }
+        });
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                xuLyMoManHinhTinNhan();
+            }
+        });
+    }
+
+    private void xuLyMoManHinhTinNhan() {
+
+    }
+
+    private void xuLyMoManHinhDanhBa() {
+        Intent intent = new Intent(MainActivity.this, DanhBa.class);
+        intent.setClassName("ute.example.contentprovider","ute.example.contentprovider.DanhBa");
+        startActivity(intent);
     }
 
 
